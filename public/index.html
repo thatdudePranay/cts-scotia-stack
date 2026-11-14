@@ -111,6 +111,13 @@ const IMG="img/",pimg=(f,id)=>`<img src="${IMG}${f}" class="panda" ${id?`id="${i
 const PANDA=pimg("panda.webp","panda"),WAVE=pimg("panda-wave.webp"),BELL=pimg("panda-bell.webp"),GOLD=pimg("panda-gold.webp");
 [...["panda","panda-sad","panda-wave","panda-bell","panda-gold"].map(n=>n+".webp"),"bill.png","node-start.png"].forEach(f=>{new Image().src=IMG+f});
 let S={},MODE="mc",AI_ON=false;
+// Sounds: cash clip for a right answer, a synthesized buzzer for a wrong one
+const CASH=new Audio("sounds/cash.mp3");CASH.preload="auto";let AC;
+function unlockAudio(){AC??=new (window.AudioContext||window.webkitAudioContext)();AC.resume?.()}
+function playCash(){try{CASH.currentTime=0;CASH.play().catch(()=>{})}catch{}}
+function playBuzz(){try{unlockAudio();const t=AC.currentTime,g=AC.createGain();g.connect(AC.destination);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.25,t+.02);g.gain.setValueAtTime(.25,t+.38);g.gain.exponentialRampToValueAtTime(.0001,t+.5);
+ [110,116].forEach(f=>{const o=AC.createOscillator();o.type="sawtooth";o.frequency.setValueAtTime(f,t);o.frequency.linearRampToValueAtTime(f*.85,t+.5);o.connect(g);o.start(t);o.stop(t+.52)})}catch{}}
 const $=s=>document.querySelector(s),main=$("#main");
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const TOP=`<div class="top"><img class="logo" src="img/logo.png" alt="Scotiabank"><img class="srch" src="img/search.png" alt="Search"></div>`;
@@ -130,6 +137,7 @@ function home(){
  <button class="${MODE==="ai"?"on":""}" onclick="MODE='ai';home()">Written + AI<small>Penny grades you</small></button></div></div>`:""}`}
 
 async function start(){
+ unlockAudio();
  S={mode:MODE,i:0,coins:0,results:[],qs:LOCAL,prev:0};
  if(MODE==="ai"){
   loading("Penny is getting today’s quiz…");
@@ -182,7 +190,7 @@ async function submit(a){
  if(mc){const opts=document.querySelectorAll(".opt");
   if(S.mode==="mc"&&opts[q.answer_index])opts[q.answer_index].classList.add("ok");
   if(opts[a]&&!(S.mode==="mc"&&a===q.answer_index))opts[a].classList.add(r.score>=70?"ok":"bad")}
- S.results.push(r);S.coins+=r.coins;drawStack(S.prev);
+ S.results.push(r);S.coins+=r.coins;drawStack(S.prev);r.coins>0?playCash():playBuzz();
  $("#life").style.width=(S.i+1)/S.qs.length*100+"%";const ht=$("#heart");ht.classList.remove("beat");void ht.offsetWidth;ht.classList.add("beat");
  $("#amt").textContent="$"+S.coins*DOLLARS_PER_COIN;
  say(r.feedback+(r.coins?`  (+$${r.coins*DOLLARS_PER_COIN})`:""));react(r.score>=60?"hop":"shake");
