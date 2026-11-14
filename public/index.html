@@ -3,34 +3,46 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ScotiaStack</title>
 <style>
-:root{--red:#DC3122;--dred:#9c1f14;--blue:#4B7FAD;--ink:#333;--line:#e2e2e2;--green:#44856a;--dg:#1f3d31}
+@font-face{font-family:Scotia;src:url(fonts/Scotia-Regular.ttf) format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:Scotia;src:url(fonts/Scotia-Bold.ttf) format("truetype");font-weight:700;font-display:swap}
+@font-face{font-family:"Scotia Headline";src:url(fonts/Scotia-Headline.ttf) format("truetype");font-display:swap}
+:root{--red:#EC111A;--dred:#9c1f14;--blue:#007EB0;--ink:#333;--line:#e2e2e2;--green:#44856a;--dg:#1f3d31}
 *{box-sizing:border-box;margin:0}
-body{font-family:system-ui,"Segoe UI",Roboto,sans-serif;background:#d9d9d9;color:var(--ink);display:flex;justify-content:center}
+body{font-family:Scotia,system-ui,"Segoe UI",Roboto,sans-serif;background:#d9d9d9;color:var(--ink);display:flex;justify-content:center}
 #app{width:100%;max-width:430px;min-height:100vh;background:#fff;display:flex;flex-direction:column;position:relative;overflow:hidden}
 #main{flex:1;display:flex;flex-direction:column;min-height:0}
 button{font-family:inherit;cursor:pointer}
+h1,h2,.big,.unit b{font-family:"Scotia Headline",Scotia,sans-serif;font-weight:400}
+.go,.opt,.node,.seg button,nav>div,.x,.srch{transition:transform .15s ease,box-shadow .15s ease}
+@media (hover:hover){.go:not(:disabled):hover,.seg button:hover,nav>div:hover,.srch:hover{transform:scale(1.08)}
+.opt:not(:disabled):hover{transform:scale(1.03)}.node:hover{transform:scale(1.1)}.node.start:hover{transform:translateX(-50%) scale(1.1)}.x:hover{transform:scale(1.25)}}
+.go:not(:disabled):active,.opt:not(:disabled):active{transform:scale(.97)}
 .hd{background:var(--red);color:#fff;padding:16px 18px 64px}
 .hd.tall{padding-bottom:26px}.hd h1{font-size:24px;margin:30px 0 0 6px}
 .top{display:flex;justify-content:space-between;align-items:center}
-.logo{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--red);font:italic 800 22px/34px Georgia,serif;text-align:center}
-.srch{width:38px;height:38px;border-radius:50%;background:#ffffff38;display:grid;place-items:center}
+.logo{width:38px;height:auto;display:block}
+.srch{width:54px;height:54px;display:block;cursor:pointer}
 .prog{display:flex;align-items:center;gap:12px;margin-top:14px}
 .x{cursor:pointer;font-size:18px}
 .pb{flex:1;height:14px;background:#fff;border-radius:9px;overflow:hidden}
-.pb i{display:block;height:100%;background:var(--blue);transition:width .4s}
+.pb i{display:block;height:100%;background:var(--blue);border-radius:9px;transition:width .6s cubic-bezier(.3,1.4,.5,1)}
+.heart{display:inline-block;color:#fff;font-size:20px}.heart.beat{animation:beat .5s}@keyframes beat{40%{transform:scale(1.45)}}
 .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-align:center}
-.pr{margin:-50px 16px 0;position:relative;z-index:1}.pr small{color:#666}.pr h2{font-size:19px;margin-top:4px}
+.pr{margin:-50px 16px 0;position:relative;z-index:1;padding:14px 22px 20px}.pr small{color:#666}.pr h2{font-size:19px;margin-top:4px}
 .srow{display:flex;justify-content:space-between;align-items:flex-start;margin:8px 16px 0}
 .sbox{border:1px solid var(--line);border-radius:10px;padding:6px 14px;text-align:center;min-width:120px}
 .sbox small{font-size:12px;color:#555;display:block}.sbox b{font-size:22px}
-.panda{width:92px;margin-top:-26px;position:relative;z-index:2}
+.panda{width:96px;margin-top:-16px;position:relative;z-index:2}
+.center .panda{width:160px;margin:0}
 .hop{animation:hop .5s}.shake{animation:shake .4s}
 @keyframes hop{40%{transform:translateY(-16px)}}
 @keyframes shake{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
 .bub{margin:6px 16px 0;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.35;background:#fff}
 .bub.think{color:#777;font-style:italic}
 .money{flex:1;min-height:130px;display:flex;align-items:flex-end;justify-content:center;padding:0 24px}
-.money svg{width:100%;max-height:260px}
+.stack{position:relative;width:240px;height:250px}
+.stack:before{content:"";position:absolute;left:14px;right:0;bottom:-4px;height:22px;border-radius:50%;background:#0002}
+.stack img{position:absolute;left:0;width:230px;filter:drop-shadow(0 2px 0 #0003)}
 .drop{animation:drop .5s both}.ghost{opacity:.22}
 @keyframes drop{from{transform:translateY(-70px);opacity:0}to{transform:none;opacity:1}}
 .opt{display:block;width:calc(100% - 32px);margin:6px 16px 0;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;text-align:left;font-size:15px}
@@ -42,13 +54,14 @@ input{flex:1;min-width:0;padding:12px;border:1px solid var(--line);border-radius
 .go{background:var(--red);color:#fff;border:0;border-radius:8px;padding:12px 18px;font-weight:700;font-size:16px}
 .go.wide{flex:1}.go.blue{background:var(--blue)}.go:disabled{opacity:.5}
 nav{display:flex;justify-content:space-around;margin:6px 16px 14px;padding:8px 2px;border:1px solid var(--line);border-radius:18px;font-size:11px;text-align:center}
-nav span{display:block;font-size:18px}
+nav>div{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:0 2px}nav img{width:28px;height:28px}
 .unit{margin:16px;background:var(--blue);color:#fff;border-radius:10px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .unit small{display:block;font-size:13px;opacity:.9}.unit b{font-size:16px}
-.path{position:relative;height:400px}
+.path{position:relative;height:490px}
 .node{position:absolute;width:76px;height:64px;border-radius:20px;background:#e6e6e6;border:0;box-shadow:0 6px 0 #c4c4c4}
-.node.start{background:var(--red);box-shadow:0 6px 0 var(--dred);left:50%;top:40px;color:#fff;font:italic 800 28px Georgia,serif;width:70px;height:60px;border-radius:50%}
-.node.start i{position:absolute;top:-34px;left:50%;transform:translateX(-50%);background:#fff;color:var(--red);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font:700 13px system-ui;font-style:normal}
+.node.start{background:url(img/node-start.png) center/contain no-repeat;box-shadow:none;left:50%;top:40px;transform:translateX(-50%);width:84px;height:84px;border-radius:50%}
+.path .wave{position:absolute;left:1%;top:255px;width:36%;max-width:150px;pointer-events:none}
+.node.start i{position:absolute;top:-34px;left:50%;transform:translateX(-50%);background:#fff;color:var(--red);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font:700 13px Scotia,system-ui;font-style:normal;white-space:nowrap}
 .modes{margin:0 16px 8px}.modes>p{font-size:13px;color:#666;margin-bottom:6px}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .seg button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 6px;font-weight:700;font-size:14px}
@@ -72,40 +85,46 @@ nav span{display:block;font-size:18px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style></head>
 <body><div id="app"><div id="main"></div>
-<nav><div><span>⌂</span>Home</div><div><b><span>S</span>Accounts</b></div><div><span>⇄</span>Move Money</div><div><span>⫴</span>Advice+</div><div><span>⁘</span>Scene+</div><div><span>≡</span>More</div></nav></div>
+<nav><div><img src="img/nav-home.png" alt="">Home</div><div><img src="img/nav-accounts.png" alt="">Accounts</div><div><img src="img/nav-move.png" alt="">Move Money</div><div><img src="img/nav-advice.png" alt="">Advice+</div><div><img src="img/nav-scene.png" alt="">Scene+</div><div><img src="img/nav-more.png" alt="">More</div></nav></div>
 <script>
 const API=location.protocol==="file:"?"http://localhost:3001":"";
 const TOPIC_ID="tax-advantaged", DOLLARS_PER_COIN=2, PASS=70;
 const CTA={label:"Open a TFSA",url:"/open-account/tfsa"};
 const LOCAL=[
-{id:"q1",type:"mc",question:"Which of these is a type of savings account?",options:["High-interest savings account","Credit card","Mortgage","Line of credit"],answer_index:0,why:"Savings accounts hold money you don’t need day to day and pay interest."},
-{id:"q2",type:"mc",question:"What does TFSA stand for?",options:["Total Funds Savings Account","Tax-Free Savings Account","Term Fixed Savings Annuity","Taxable Fund Starter Account"],answer_index:1,why:"A Tax-Free Savings Account."},
-{id:"q3",type:"mc",question:"What happens to growth inside a TFSA?",options:["It’s taxed every year","It’s taxed when you withdraw","It isn’t taxed","It’s taxed at half rate"],answer_index:2,why:"Interest, dividends and gains in a TFSA grow tax-free, and withdrawals aren’t taxed."},
-{id:"q4",type:"mc",question:"What happens to unused TFSA contribution room?",options:["It disappears","It carries forward","It goes to the bank","It’s refunded"],answer_index:1,why:"Unused room carries forward to future years."},
-{id:"q5",type:"mc",question:"What is an RRSP mainly for?",options:["Everyday spending","Saving for retirement","Paying off credit cards","Travel rewards"],answer_index:1,why:"RRSP contributions are tax-deductible and the money is taxed when withdrawn, so it’s built for retirement."},
-{id:"q6",type:"mc",question:"Who is the FHSA designed for?",options:["First-time home buyers","Retirees","Children under 10","Business owners"],answer_index:0,why:"The First Home Savings Account helps first-time buyers save for a home."},
-{id:"q7",type:"mc",question:"Is a TFSA an investment itself?",options:["Yes, it’s a type of stock","No, it’s an account that can hold investments","Yes, it’s a type of bond","No, it can only hold cash"],answer_index:1,why:"A TFSA is an account type. It can hold cash, GICs, ETFs, stocks and more."}];
+{id:"q1",type:"mc",question:"You get $20 for your birthday. What’s the “pay yourself first” move?",options:["Spend it all today","Put some in savings before spending","Lend it to a stranger","Hide it in a sock forever"],answer_index:1,why:"Paying yourself first means saving a slice before you spend the rest."},
+{id:"q2",type:"mc",question:"Which one is a NEED, not a want?",options:["Concert tickets","Groceries","A new phone case","Bubble tea"],answer_index:1,why:"Needs keep you going (food, rent, transit). Wants are the fun extras."},
+{id:"q3",type:"mc",question:"What is a budget?",options:["A plan for how you’ll use your money","A type of credit card","A bank fee","A shopping app"],answer_index:0,why:"A budget is just a plan: money in, money out, and where it goes."},
+{id:"q4",type:"mc",question:"Your savings account pays interest. What does that mean?",options:["You pay the bank to hold it","The bank pays you for keeping money there","Your money disappears slowly","Nothing happens"],answer_index:1,why:"Interest is money the bank pays you for saving with them."},
+{id:"q5",type:"mc",question:"What’s an emergency fund for?",options:["Surprise costs like a broken phone","Weekend shopping","Buying lottery tickets","Paying for vacations"],answer_index:0,why:"An emergency fund covers surprises so you don’t need to borrow."},
+{id:"q6",type:"mc",question:"Compound interest means you earn interest on…",options:["Only the money you put in","Your money AND the interest it already earned","Other people’s money","Nothing at all"],answer_index:1,why:"Interest on interest. Start early and your stack snowballs."},
+{id:"q7",type:"mc",question:"What does TFSA stand for?",options:["Totally Free Shopping Account","Tax-Free Savings Account","Term Fixed Savings Annuity","Tiny Fund Starter Account"],answer_index:1,why:"A Tax-Free Savings Account: growth and withdrawals aren’t taxed."},
+{id:"q8",type:"mc",question:"Paying your credit card in full every month helps you…",options:["Avoid interest and build good credit","Get a higher bill","Lower your savings","Lose your card"],answer_index:0,why:"Paying the full balance on time skips interest and builds your credit score."},
+{id:"q9",type:"mc",question:"An RRSP is mainly built for…",options:["Retirement","Buying snacks","Paying rent this month","Gaming upgrades"],answer_index:0,why:"RRSP = Registered Retirement Savings Plan, made for your future self."},
+{id:"q10",type:"mc",question:"Which account helps first-time home buyers save?",options:["FHSA","Chequing account","Credit card","Gift card"],answer_index:0,why:"The First Home Savings Account (FHSA) is built for your first home."}];
 const LESSON={title:"Tax-advantaged basics",intro:"Let’s lock in the three big accounts!",cards:[
 {type:"explain",heading:"TFSA: tax-free growth",body:"A Tax-Free Savings Account lets your money grow without tax. Withdrawals are tax-free too, and unused room carries forward.",penny_tip:"A TFSA is an account, not an investment. It can hold cash, GICs or ETFs."},
 {type:"check",question:"What’s taxed inside a TFSA?",options:["Interest","Gains","Withdrawals","Nothing"],answer_index:3,why:"Growth and withdrawals are both tax-free."},
 {type:"explain",heading:"RRSP: built for retirement",body:"RRSP contributions reduce your taxable income today. You pay tax later when you withdraw, ideally when your income is lower.",penny_tip:"Think: TFSA is flexible, RRSP is for retirement."},
 {type:"explain",heading:"FHSA: your first home",body:"A First Home Savings Account is for first-time buyers. Contributions are deductible and qualifying withdrawals for a home are tax-free.",penny_tip:"It mixes the best of both accounts."},
 {type:"check",question:"Which account is made for first-time home buyers?",options:["RRSP","TFSA","FHSA","Chequing"],answer_index:2,why:"The FHSA is built for first-time home buyers."}]};
-const PANDA=`<svg viewBox="0 0 130 120" class="panda" id="panda"><ellipse cx="62" cy="112" rx="34" ry="7" fill="#0003"/><path d="M88 102q28-2 34 10" stroke="#d6342a" stroke-width="14" fill="none" stroke-linecap="round"/><path d="M88 102q28-2 34 10" stroke="#fff" stroke-width="14" fill="none" stroke-dasharray="4 8"/><path d="M38 112q-4-40 26-44 30 4 26 44z" fill="#d6342a"/><path d="M40 26l-8-20 24 8zM88 26l8-20-24 8z" fill="#d6342a"/><path d="M40 22l-3-9 10 3zM88 22l3-9-10 3z" fill="#fff"/><circle cx="64" cy="45" r="27" fill="#d6342a"/><ellipse cx="48" cy="53" rx="10" ry="9" fill="#fff"/><ellipse cx="80" cy="53" rx="10" ry="9" fill="#fff"/><ellipse cx="64" cy="56" rx="10" ry="8" fill="#fff"/><circle cx="64" cy="52" r="3.4" fill="#222"/><circle cx="52" cy="42" r="3" fill="#222"/><circle cx="76" cy="42" r="3" fill="#222"/></svg>`;
+const IMG="img/",pimg=(f,id)=>`<img src="${IMG}${f}" class="panda" ${id?`id="${id}"`:""} alt="Penny the red panda">`;
+const PANDA=pimg("panda.webp","panda"),WAVE=pimg("panda-wave.webp"),BELL=pimg("panda-bell.webp"),GOLD=pimg("panda-gold.webp");
+[...["panda","panda-sad","panda-wave","panda-bell","panda-gold"].map(n=>n+".webp"),"bill.png","node-start.png"].forEach(f=>{new Image().src=IMG+f});
 let S={},MODE="mc",AI_ON=false;
 const $=s=>document.querySelector(s),main=$("#main");
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const hdr=x=>`<div class="hd"><div class="top"><div class="logo">S</div><div class="srch">⌕</div></div>${x||""}</div>`;
+const TOP=`<div class="top"><img class="logo" src="img/logo.png" alt="Scotiabank"><img class="srch" src="img/search.png" alt="Search"></div>`;
+const hdr=x=>`<div class="hd">${TOP}${x||""}</div>`;
 async function api(p,b){const r=await fetch(API+p,b?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:undefined);if(!r.ok)throw new Error(r.status);return r.json()}
 function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;$("#app").append(d);setTimeout(()=>d.remove(),5000)}
-function loading(t){clearInterval(S.t);main.innerHTML=`<div class="center">${PANDA}<p class="pulse">${t}</p></div>`}
+function loading(t){clearInterval(S.t);main.innerHTML=`<div class="center">${BELL}<p class="pulse">${t}</p></div>`}
 
 function home(){
  clearInterval(S.t);
- main.innerHTML=`<div class="hd tall"><div class="top"><div class="logo">S</div><div class="srch">⌕</div></div><h1>Good morning, Jennifer</h1></div>
+ main.innerHTML=`<div class="hd tall">${TOP}<h1>Good morning, Jennifer</h1></div>
  <div class="unit"><div><small>SECTION 1, UNIT 2</small><b>Tax-Advantaged Savings Accounts</b></div><span>≡</span></div>
- <div class="path"><button class="node start" onclick="start()"><i>START</i>S</button>
- <div class="node" style="left:16%;top:130px"></div><div class="node" style="left:36%;top:230px"></div><div class="node" style="left:62%;top:300px"></div></div>
+ <div class="path"><button class="node start" onclick="start()" aria-label="Start"><i>START</i></button><img class="wave" src="img/panda-wave.webp" alt="">
+ <div class="node" style="left:30%;top:140px"></div><div class="node" style="left:41%;top:235px"></div><div class="node" style="left:56%;top:315px"></div><div class="node" style="left:41%;top:405px"></div></div>
  ${AI_ON?`<div class="modes"><p>Game mode</p><div class="seg">
  <button class="${MODE==="mc"?"on":""}" onclick="MODE='mc';home()">Multiple choice<small>No AI, instant</small></button>
  <button class="${MODE==="ai"?"on":""}" onclick="MODE='ai';home()">Written + AI<small>Penny grades you</small></button></div></div>`:""}`}
@@ -119,22 +138,20 @@ async function start(){
  }
  quiz();
 }
-const maxBills=16,bills=()=>Math.round(S.coins/(S.qs.length*10)*maxBills);
-function bill(i,cls,d){const x=(i%3-1)*3,y=250-i*14;
- return `<g transform="translate(${x},${y})"><g class="${cls}" style="animation-delay:${d}ms"><path d="M30 0L250-12 290 10 70 24Z" fill="#44856a" stroke="#1f3d31" stroke-width="5" stroke-linejoin="round"/><path d="M70 24L290 10V22L70 36Z" fill="#1f3d31"/><path d="M30 0L70 24V36L30 12Z" fill="#17302a"/><ellipse cx="160" cy="6" rx="26" ry="12" fill="#1f3d31"/><text x="160" y="13" font-size="20" font-weight="700" fill="#44856a" text-anchor="middle">$</text><circle cx="92" cy="10" r="5" fill="#1f3d31"/><circle cx="228" cy="0" r="5" fill="#1f3d31"/></g></g>`}
-function drawStack(prev){const n=bills();let h='<ellipse cx="175" cy="288" rx="130" ry="12" fill="#0002"/>';
- if(!n)h+=bill(0,"ghost",0);
- for(let i=0;i<n;i++)h+=bill(i,i>=prev?"drop":"",(i-prev)*90);
- $("#stack").innerHTML=h;S.prev=n}
+const bills=()=>S.results.filter(r=>r.coins>0).length;
+function drawStack(prev){const n=bills(),st=$("#stack");let h="";
+ if(!n)h=`<img src="${IMG}bill.png" alt="" style="bottom:0;opacity:.22">`;
+ for(let i=0;i<n;i++)h+=`<img src="${IMG}bill.png" alt="" class="${i>=prev?"drop":""}" style="bottom:${i*17}px;left:${[0,6,-4,3,-6,5][i%6]}px;z-index:${i}">`;
+ st.innerHTML=h;st.setAttribute("aria-label",n+" bills stacked");S.prev=n}
 
 function quiz(){
  const q=S.qs[S.i],n=S.qs.length,free=q.type==="free";
  S.locked=false;S.left=S.max=free?60:30;
- main.innerHTML=hdr(`<div class="prog"><span class="x" onclick="home()">✕</span><div class="pb"><i style="width:${S.i/n*100}%"></i></div><span>♥</span></div>`)+
+ main.innerHTML=hdr(`<div class="prog"><span class="x" onclick="home()">✕</span><div class="pb"><i id="life" style="width:${S.i/n*100}%"></i></div><span class="heart" id="heart">♥</span></div>`)+
  `<div class="card pr"><small>Prompt ${S.i+1} of ${n}</small><h2>${esc(q.question)}</h2></div>
  <div class="srow"><div class="sbox"><small>Your Stack</small><b id="amt">$${S.coins*DOLLARS_PER_COIN}</b></div>${PANDA}</div>
  <div class="bub think" id="bub" hidden></div>
- <div class="money"><svg id="stack" viewBox="0 0 320 300"></svg></div>
+ <div class="money"><div class="stack" id="stack" role="img"></div></div>
  <div id="opts">${free?"":q.options.map((o,k)=>`<button class="opt" onclick="submit(${k})">${esc(o)}</button>`).join("")}</div>
  <div class="bot" id="bot"><div class="tm" id="tm"></div>${free?`<input id="ans" placeholder="type your answer…" maxlength="400" autocomplete="off" onkeydown="if(event.key==='Enter')sendFree()"><button class="go" onclick="sendFree()">stack</button>`:`<span class="hint">Pick an answer to stack</span>`}</div>`;
  drawStack(S.prev);tick();
@@ -144,7 +161,7 @@ function quiz(){
 function tick(){const e=$("#tm");if(e){e.textContent=Math.max(S.left,0);e.style.setProperty("--e",360*(1-S.left/S.max))}}
 function say(t,think){const b=$("#bub");b.hidden=false;b.className="bub"+(think?" think":"");b.textContent=t}
 function sendFree(){const v=$("#ans").value.trim();if(v)submit(v)}
-function react(c){const p=$("#panda");p.classList.remove("hop","shake");void p.getBoundingClientRect();p.classList.add(c)}
+function react(c){const p=$("#panda");p.src=IMG+(c==="shake"?"panda-sad.webp":"panda.webp");p.classList.remove("hop","shake");void p.getBoundingClientRect();p.classList.add(c)}
 const fail=()=>({score:50,coins:5,concepts_missed:[],feedback:"Penny’s connection dropped, so here’s partial credit. Keep going!"});
 
 async function submit(a){
@@ -166,6 +183,7 @@ async function submit(a){
   if(S.mode==="mc"&&opts[q.answer_index])opts[q.answer_index].classList.add("ok");
   if(opts[a]&&!(S.mode==="mc"&&a===q.answer_index))opts[a].classList.add(r.score>=70?"ok":"bad")}
  S.results.push(r);S.coins+=r.coins;drawStack(S.prev);
+ $("#life").style.width=(S.i+1)/S.qs.length*100+"%";const ht=$("#heart");ht.classList.remove("beat");void ht.offsetWidth;ht.classList.add("beat");
  $("#amt").textContent="$"+S.coins*DOLLARS_PER_COIN;
  say(r.feedback+(r.coins?`  (+$${r.coins*DOLLARS_PER_COIN})`:""));react(r.score>=60?"hop":"shake");
  const last=S.i===S.qs.length-1;
@@ -205,8 +223,8 @@ function card(){
  const L=S.L,c=L.cards[S.c],n=L.cards.length;
  const body=c.type==="check"
   ?`<h2>${esc(c.question)}</h2>${c.options.map((o,k)=>`<button class="opt" style="width:100%;margin:6px 0" onclick="ans(${k})">${esc(o)}</button>`).join("")}<div class="bub" id="why" hidden></div>`
-  :`<h2>${esc(c.heading)}</h2><p>${esc(c.body)}</p><div class="bub" style="margin:14px 0 0">🐼 ${esc(c.penny_tip)}</div>`;
- main.innerHTML=hdr(`<div class="prog"><span class="x" onclick="results()">✕</span><div class="pb"><i style="width:${S.c/n*100}%"></i></div><span>♥</span></div>`)+
+  :`<h2>${esc(c.heading)}</h2><p>${esc(c.body)}</p><div class="bub" style="margin:14px 0 0;display:flex;gap:10px;align-items:center"><img src="${IMG}panda.webp" alt="" style="width:40px">${esc(c.penny_tip)}</div>`;
+ main.innerHTML=hdr(`<div class="prog"><span class="x" onclick="results()">✕</span><div class="pb"><i style="width:${S.c/n*100}%"></i></div><span class="heart">♥</span></div>`)+
  `<div class="card pr" style="text-align:left"><small>${esc(L.title)}</small></div><div class="pad lcard" style="flex:1">${S.c===0&&L.intro?`<p style="color:#666;margin-bottom:8px">${esc(L.intro)}</p>`:""}${body}</div>
  <div class="bot"><button class="go wide" id="nx" onclick="nextCard()" ${c.type==="check"?"disabled":""}>Continue</button></div>`;
 }
@@ -215,7 +233,7 @@ function ans(k){const c=S.L.cards[S.c],o=document.querySelectorAll(".opt");
  const w=$("#why");w.hidden=false;w.textContent=c.why;$("#nx").disabled=false}
 function nextCard(){S.c++;if(S.c<S.L.cards.length)return card();
  const cta=S.f.cta||CTA;
- main.innerHTML=`<div class="center">${PANDA}<h2>Lesson complete!</h2><p>Nice work. You’re ready to open the account you just learned about.</p><button class="go" onclick="openAcct()">${esc(cta.label)}</button><button class="go blue" onclick="results()">Back to results</button></div>`}
+ main.innerHTML=`<div class="center">${GOLD}<h2>Lesson complete!</h2><p>Nice work. You’re ready to open the account you just learned about.</p><button class="go" onclick="openAcct()">${esc(cta.label)}</button><button class="go blue" onclick="results()">Back to results</button></div>`}
 
 function openAcct(){const cta=S.f.cta||CTA,d=document.createElement("div");d.className="sheet";
  d.innerHTML=`<div><h2>${esc(cta.label)}</h2><p>Demo only: this would open <b>${esc(cta.url)}</b> in the Scotiabank app.</p><input value="Jennifer" aria-label="Full name"><input value="Student account holder" aria-label="Account holder type"><button class="go" id="ok">Continue</button></div>`;
