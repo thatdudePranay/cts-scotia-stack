@@ -5,7 +5,6 @@ import { askJSON, getClient, FAST, SMART } from "./src/ai.js";
 import { TOPICS, topicForToday } from "./src/curriculum.js";
 import { FALLBACK_QUESTIONS } from "./src/fallbackQuiz.js";
 import { QUIZ_SYSTEM, GRADE_SYSTEM, LESSON_SYSTEM, CHAT_SYSTEM } from "./src/prompts.js";
-import { readFileSync } from "node:fs";
 
 // AI master switch: needs AI_ENABLED=true AND an API key. Otherwise the game is multiple choice only.
 const AI_ENABLED = process.env.AI_ENABLED === "true" && !!process.env.ANTHROPIC_API_KEY;
@@ -15,14 +14,13 @@ if (process.env.AI_ENABLED === "true" && !process.env.ANTHROPIC_API_KEY)
 const app = express();
 app.use(cors());
 app.use(express.json());
-const indexHtml = readFileSync(new URL("./public/index.html", import.meta.url), "utf8");
-app.get("/", (_, res) => res.type("html").send(indexHtml));
+app.use(express.static(new URL("./public", import.meta.url).pathname));
 
 const requireAI = (req, res, next) =>
   AI_ENABLED ? next() : res.status(403).json({ error: "AI is disabled on this server" });
 
 const PASS_THRESHOLD = 70;
-const NUM_QUESTIONS = 7;
+const NUM_QUESTIONS = 10;
 const quizCache = new Map();
 const today = () => new Date().toISOString().slice(0, 10);
 const strip = ({ rubric, answer_index, why, ...safe }) => safe;
