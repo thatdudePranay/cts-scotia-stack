@@ -244,7 +244,7 @@ function nextCard(){S.c++;if(S.c<S.L.cards.length)return card();
  main.innerHTML=`<div class="center">${GOLD}<h2>Lesson complete!</h2><p>Nice work. You’re ready to open the account you just learned about.</p><button class="go" onclick="openAcct()">${esc(cta.label)}</button><button class="go blue" onclick="results()">Back to results</button></div>`}
 
 function openAcct(){const cta=S.f.cta||CTA,d=document.createElement("div");d.className="sheet";
- d.innerHTML=`<div><h2>${esc(cta.label)}</h2><p>Demo only: this would open <b>${esc(cta.url)}</b> in the Scotiabank app.</p><input value="Jennifer" aria-label="Full name"><input value="Student account holder" aria-label="Account holder type"><button class="go" id="ok">Continue</button></div>`;
+ d.innerHTML=`<div><h2>${esc(cta.label)}</h2><p>Demo only: this would open <b>${esc(cta.url)}</b> in the Scotiabank app.</p><button class="go" id="ok">Continue</button></div>`;
  $("#app").append(d);$("#ok").onclick=()=>{d.firstChild.innerHTML=`<h2>You’re all set!</h2><p>Your ${esc(cta.label.replace("Open a ",""))} application is started. (Demo)</p><button class="go" id="cl">Done</button>`;$("#cl").onclick=()=>{d.remove();home()}}}
 fetch(API+"/api/config").then(r=>r.json()).then(c=>{AI_ON=!!c.aiEnabled}).catch(()=>{}).finally(()=>{if(!AI_ON)MODE="mc";home()});
 </script></body></html>
