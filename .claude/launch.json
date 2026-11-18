@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "scotiastack", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3001 }
+    { "name": "scotiastack", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3001 },
+    { "name": "personal-site", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/Users/renransun/Documents/GitHub/personal-site"], "port": 8765 }
   ]
 }
